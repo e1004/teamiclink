@@ -1,7 +1,7 @@
 from upt.install.controller import InstallController
 
 
-def test_it_returns_tere(target):
+def test_it_redirects(target):
     # given
     url = InstallController.URI
 
