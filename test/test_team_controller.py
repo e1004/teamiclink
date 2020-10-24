@@ -10,4 +10,3 @@ def test_it_returns_tere(target):
 
     # then
     assert result.status_code == 201
-
