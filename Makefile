@@ -1,4 +1,5 @@
 MIGRATOR := migrate/migrate:v4.13.0
+LOCAL_DB_URI := postgres://postgres:postgres@local-db:5432/main_db?sslmode=disable
 
 .PHONY: create_migration
 create_migration:
@@ -23,6 +24,28 @@ start_db_local:
 stop_db_local:
 	docker container stop local-db
 	docker network rm local-db-net
+
+.PHONY: migrate_db_local_up
+migrate_db_local_up:
+	docker run \
+		-v ${PWD}:/root/sources \
+		-v ${PWD}/migrations:/migrations \
+		-w /root/sources \
+		--net local-db-net \
+		--rm ${MIGRATOR} \
+		-database ${LOCAL_DB_URI} \
+		-path ./migrations up
+
+.PHONY: migrate_db_local_down
+migrate_db_local_down:
+	docker run \
+		-v ${PWD}:/root/sources \
+		-v ${PWD}/migrations:/migrations \
+		-w /root/sources \
+		--net local-db-net \
+		--rm ${MIGRATOR} \
+		-database ${LOCAL_DB_URI} \
+		-path ./migrations down -all
 
 .PHONY: test
 test:
