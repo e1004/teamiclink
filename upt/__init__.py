@@ -3,6 +3,9 @@ from flask import Flask
 from upt.config import AppConfig
 from upt.install.controller import InstallController
 from upt.team.controller import TeamController
+import psycopg2.extras
+
+psycopg2.extras.register_uuid()
 
 
 def create_app(config: AppConfig):
