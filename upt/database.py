@@ -21,7 +21,7 @@ class Database:
 
     @classmethod
     @contextmanager
-    def create_cursor(cls, connection):
+    def create_cursor(_, connection):
         try:
             cursor = connection.cursor(cursor_factory=RealDictCursor)
             yield cursor
