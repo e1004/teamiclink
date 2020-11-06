@@ -1,4 +1,3 @@
-from psycopg2 import connect
 import pytest
 from upt.database import Database
 
@@ -14,7 +13,7 @@ DB_USER_REGULAR = (
     f"postgres://{DB['user']}:"
     f"{DB['password']}@"
     f"{DB['host']}:"
-    f"{DB['port']}:"
+    f"{DB['port']}/"
     f"{DB['dbname']}?sslmode=disable"
 )
 
@@ -22,7 +21,7 @@ DB_USER_ROOT = (
     "postgres://postgres:"
     "postgres@"
     f"{DB['host']}:"
-    f"{DB['port']}:"
+    f"{DB['port']}/"
     f"{DB['dbname']}?sslmode=disable"
 )
 
@@ -40,7 +39,7 @@ def create_db_cleaner():
                     BEGIN
                         EXECUTE 'TRUNCATE TABLE '
                         || string_agg(quote_ident(schemaname) || '.' || quote_ident(tablename), ', ')
-                        || ' CASCADE'
+                        || ' CASCADE;'
                         FROM   pg_tables
                         WHERE  schemaname = 'upt';
                     END
