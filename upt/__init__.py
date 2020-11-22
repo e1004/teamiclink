@@ -2,7 +2,7 @@ import psycopg2.extras
 from flask import Flask
 from slack_bolt.adapter.flask import SlackRequestHandler
 
-from upt.install.controller import InstallController
+from upt.install import InstallController
 from upt.team.controller import TeamController
 
 psycopg2.extras.register_uuid()

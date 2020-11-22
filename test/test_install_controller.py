@@ -1,4 +1,4 @@
-from upt.install.controller import InstallController
+from upt.install import InstallController
 from unittest.mock import MagicMock
 from slack_bolt.oauth import OAuthFlow
 from flask import request
