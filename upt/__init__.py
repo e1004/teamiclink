@@ -1,14 +1,14 @@
+import psycopg2.extras
 from flask import Flask
+from slack_bolt.adapter.flask import SlackRequestHandler
 
-from upt.config import AppConfig
 from upt.install.controller import InstallController
 from upt.team.controller import TeamController
-import psycopg2.extras
 
 psycopg2.extras.register_uuid()
 
 
-def create_app(config: AppConfig):
+def create_app(slack_handler: SlackRequestHandler):
     app = Flask(__name__)
     app.add_url_rule(
         TeamController.URI,
@@ -16,10 +16,8 @@ def create_app(config: AppConfig):
     )
     app.add_url_rule(
         InstallController.URI,
-        view_func=InstallController.as_view("install_controller", config=config),
+        view_func=InstallController.as_view(
+            "install_controller", slack_handler=slack_handler
+        ),
     )
     return app
-
-
-config = AppConfig(slack_client_id="any_string", slack_permissions=[])
-app = create_app(config=config)
