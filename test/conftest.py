@@ -21,4 +21,4 @@ def target():
     app = create_app(slack_handler=slack_handler)
     app.testing = True
     with app.test_client() as client:
-        return Target(client=client, slack_handler=slack_handler)
+        yield Target(client=client, slack_handler=slack_handler)

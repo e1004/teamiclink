@@ -18,3 +18,13 @@ class InstallController(MethodView):
         state = oauth_flow.issue_new_state(request=request)
         url = oauth_flow.build_authorize_url(state=state, request=request)
         return redirect(location=url)
+
+
+@dataclass
+class OAuthRedirectController(MethodView):
+    slack_handler: SlackRequestHandler
+
+    URI: ClassVar[str] = "/slack/oath_redirect"
+
+    def get(self):
+        return self.slack_handler.handle(req=request)
