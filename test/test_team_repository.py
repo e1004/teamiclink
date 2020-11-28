@@ -1,4 +1,4 @@
-from test.integration.conftest import DB_USER_REGULAR, DB_USER_ROOT
+from test.conftest import DB_USER_REGULAR, DB_USER_ROOT
 
 import pytest
 from upt.database import Database
