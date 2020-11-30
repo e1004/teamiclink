@@ -35,3 +35,18 @@ class TeamiclinkInstallStore:
                 response = cursor.fetchone()
 
         return TeamiclinkBot(**response)
+
+    def read_bot(self, team_id: str) -> TeamiclinkBot:
+        query = """
+            SELECT id, team_id, bot_token, bot_id, bot_user_id, installed_at
+            FROM teamiclink.slack_bot
+            WHERE team_id=%(team_id)s;
+        """
+        query_params = dict(team_id=team_id)
+
+        with Database.connect(data_source_name=self.data_source_name) as connection:
+            with Database.create_cursor(connection=connection) as cursor:
+                cursor.execute(query, query_params)
+                response = cursor.fetchone()
+
+        return TeamiclinkBot(**response)
