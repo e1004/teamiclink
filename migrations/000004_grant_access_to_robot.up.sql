@@ -1,2 +1,3 @@
-GRANT USAGE ON SCHEMA upt TO robot;
-GRANT SELECT, INSERT, UPDATE, DELETE ON upt.team TO robot;
+GRANT USAGE ON SCHEMA teamiclink TO robot;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON teamiclink.slack_bot TO robot;

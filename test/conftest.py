@@ -5,8 +5,8 @@ from unittest.mock import MagicMock
 import pytest
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.app import App
-from upt.app import create_app
-from upt.database import Database
+from teamiclink.app import create_app
+from teamiclink.database import Database
 
 DB = {
     "host": "localhost",
@@ -48,7 +48,7 @@ def create_db_cleaner():
                         || string_agg(quote_ident(schemaname) || '.' || quote_ident(tablename), ', ')
                         || ' CASCADE;'
                         FROM   pg_tables
-                        WHERE  schemaname = 'upt';
+                        WHERE  schemaname = 'teamiclink';
                     END
                     $func$ LANGUAGE plpgsql;
                 """

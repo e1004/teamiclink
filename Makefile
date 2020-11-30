@@ -53,6 +53,11 @@ test:
 
 .PHONY: lint
 lint:
-	flake8 upt test
-	black upt test --check
-	mypy -p upt
+	flake8 teamiclink test
+	black teamiclink test --check
+	mypy -p teamiclink
+
+.PHONY: format_migrations
+format_migrations:
+	find ./migrations -type f -name '*.sql' \
+	-type f -exec pg_format --no-extra-line --inplace {} \;
