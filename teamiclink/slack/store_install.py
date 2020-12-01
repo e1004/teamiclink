@@ -2,10 +2,13 @@ from dataclasses import dataclass
 from teamiclink.slack.model import TeamiclinkBot
 from teamiclink.database import Database
 from datetime import datetime
+from slack_sdk.oauth.installation_store import InstallationStore
+from slack_sdk.oauth.installation_store import Bot
+from typing import Optional
 
 
 @dataclass
-class TeamiclinkInstallStore:
+class TeamiclinkInstallStore(InstallationStore):
     data_source_name: str
 
     def create_bot(
@@ -50,3 +53,17 @@ class TeamiclinkInstallStore:
                 response = cursor.fetchone()
 
         return TeamiclinkBot(**response)
+
+    def find_bot(
+        self, *, team_id: Optional[str], enterprise_id: Optional[str] = None
+    ) -> Optional[Bot]:
+        assert team_id
+        teamiclink_bot = self.read_bot(team_id=team_id)
+        return Bot(
+            team_id=teamiclink_bot.team_id,
+            bot_token=teamiclink_bot.bot_token,
+            bot_id=teamiclink_bot.bot_id,
+            bot_user_id=teamiclink_bot.bot_user_id,
+            installed_at=teamiclink_bot.installed_at.timestamp(),
+        )
+

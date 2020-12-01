@@ -1,12 +1,11 @@
-from teamiclink.slack.model import TeamiclinkBot
-from uuid import uuid4
+from datetime import datetime, timezone
 from test.conftest import DB_USER_REGULAR
+from uuid import uuid4
 
 import pytest
+from teamiclink.slack.model import TeamiclinkBot
 from teamiclink.slack.store_install import TeamiclinkInstallStore
-from datetime import datetime, timezone
 
-pytestmark = pytest.mark.usefixtures("clean_db")
 
 TEAM_ID, BOT_TOKEN, BOT_ID, BOT_USER_ID = (
     str(uuid4()),
@@ -33,6 +32,7 @@ def slack_bot(install_store: TeamiclinkInstallStore):
     )
 
 
+@pytest.mark.usefixtures("clean_db")
 def test_it_creates_slack_bot(install_store: TeamiclinkInstallStore):
     # when
     result = install_store.create_bot(
@@ -51,6 +51,7 @@ def test_it_creates_slack_bot(install_store: TeamiclinkInstallStore):
     assert result.bot_token == BOT_TOKEN
 
 
+@pytest.mark.usefixtures("clean_db")
 def test_it_reads_slack_bot(
     install_store: TeamiclinkInstallStore, slack_bot: TeamiclinkBot
 ):
@@ -63,3 +64,28 @@ def test_it_reads_slack_bot(
     assert result.bot_user_id == slack_bot.bot_user_id
     assert result.installed_at == slack_bot.installed_at
     assert result.bot_token == slack_bot.bot_token
+
+
+def test_it_finds_bot(install_store: TeamiclinkInstallStore, mocker):
+    # given
+    read = mocker.patch.object(install_store, "read_bot")
+    bot = TeamiclinkBot(
+        id=uuid4(),
+        team_id=TEAM_ID,
+        bot_token=BOT_TOKEN,
+        bot_id=BOT_ID,
+        bot_user_id=BOT_USER_ID,
+        installed_at=INSTALLED_AT,
+    )
+    read.return_value = bot
+
+    # when
+    result = install_store.find_bot(team_id=bot.team_id)
+
+    # then
+    read.assert_called_once_with(team_id=TEAM_ID)
+    assert result.team_id == bot.team_id
+    assert result.bot_id == bot.bot_id
+    assert result.bot_user_id == bot.bot_user_id
+    assert result.bot_token == bot.bot_token
+    assert result.installed_at == bot.installed_at.timestamp()
