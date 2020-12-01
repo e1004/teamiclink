@@ -62,7 +62,11 @@ class TeamiclinkInstallStore(InstallationStore):
         self, *, team_id: Optional[str], enterprise_id: Optional[str] = None
     ) -> Optional[Bot]:
         assert team_id
-        teamiclink_bot = self.read_bot(team_id=team_id)
+        try:
+            teamiclink_bot = self.read_bot(team_id=team_id)
+        except MissingBotError:
+            return None
+
         return Bot(
             team_id=teamiclink_bot.team_id,
             bot_token=teamiclink_bot.bot_token,

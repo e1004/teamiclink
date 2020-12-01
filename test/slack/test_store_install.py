@@ -93,6 +93,20 @@ def test_it_finds_bot(install_store: TeamiclinkInstallStore, mocker):
     assert result.installed_at == bot.installed_at.timestamp()
 
 
+def test_it_returns_none_when_finding_missing_bot(
+    install_store: TeamiclinkInstallStore, mocker
+):
+    # given
+    read = mocker.patch.object(install_store, "read_bot")
+    read.side_effect = MissingBotError("any_message")
+
+    # when
+    result = install_store.find_bot(team_id=TEAM_ID)
+
+    # then
+    assert result is None
+
+
 @pytest.mark.usefixtures("clean_db")
 def test_it_raises_error_when_reading_missing_bot(
     install_store: TeamiclinkInstallStore,

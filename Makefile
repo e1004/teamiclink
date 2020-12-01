@@ -61,3 +61,7 @@ lint:
 format_migrations:
 	find ./migrations -type f -name '*.sql' \
 	-type f -exec pg_format --no-extra-line --inplace {} \;
+
+.PHONY: test
+test:
+	pytest -v --cov teamiclink
