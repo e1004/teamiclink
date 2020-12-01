@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from teamiclink.slack.errors import MissingBotError
 from teamiclink.slack.model import TeamiclinkBot
 from teamiclink.database import Database
 from datetime import datetime
@@ -52,7 +53,10 @@ class TeamiclinkInstallStore(InstallationStore):
                 cursor.execute(query, query_params)
                 response = cursor.fetchone()
 
-        return TeamiclinkBot(**response)
+        try:
+            return TeamiclinkBot(**response)
+        except TypeError:
+            raise MissingBotError(f"bot missing for team {team_id}")
 
     def find_bot(
         self, *, team_id: Optional[str], enterprise_id: Optional[str] = None
@@ -66,4 +70,3 @@ class TeamiclinkInstallStore(InstallationStore):
             bot_user_id=teamiclink_bot.bot_user_id,
             installed_at=teamiclink_bot.installed_at.timestamp(),
         )
-

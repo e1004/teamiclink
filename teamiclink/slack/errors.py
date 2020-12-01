@@ -1,0 +1,2 @@
+class MissingBotError(Exception):
+    pass

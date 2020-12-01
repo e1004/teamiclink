@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+from teamiclink.slack.errors import MissingBotError
+
 from test.conftest import DB_USER_REGULAR
 from uuid import uuid4
 
@@ -89,3 +91,17 @@ def test_it_finds_bot(install_store: TeamiclinkInstallStore, mocker):
     assert result.bot_user_id == bot.bot_user_id
     assert result.bot_token == bot.bot_token
     assert result.installed_at == bot.installed_at.timestamp()
+
+
+@pytest.mark.usefixtures("clean_db")
+def test_it_raises_error_when_reading_missing_bot(
+    install_store: TeamiclinkInstallStore,
+):
+    # when
+    try:
+        install_store.read_bot(team_id=TEAM_ID)
+        pytest.fail("expected error")
+
+    # then
+    except MissingBotError as error:
+        assert TEAM_ID in str(error)
