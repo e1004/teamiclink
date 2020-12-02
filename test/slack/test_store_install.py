@@ -154,3 +154,30 @@ def test_it_updates_bot(
     assert result.bot_id == new_bot_id
     assert result.bot_token == new_bot_token
     assert result.bot_user_id == new_bot_user_id
+
+
+@pytest.mark.usefixtures("clean_db")
+def test_it_updates_fields_when_creating_existing_bot(
+    install_store: TeamiclinkInstallStore, slack_bot: TeamiclinkBot, mocker
+):
+    # given
+    updater = mocker.patch.object(install_store, "update_bot")
+    updater.return_value = slack_bot
+
+    # when
+    result = install_store.create_bot(
+        team_id=slack_bot.team_id,
+        bot_token=slack_bot.bot_token,
+        bot_id=slack_bot.bot_id,
+        bot_user_id=slack_bot.bot_user_id,
+        installed_at=slack_bot.installed_at,
+    )
+
+    # then
+    assert result == updater.return_value
+    updater.assert_called_once_with(
+        team_id=slack_bot.team_id,
+        bot_token=slack_bot.bot_token,
+        bot_id=slack_bot.bot_id,
+        bot_user_id=slack_bot.bot_user_id,
+    )

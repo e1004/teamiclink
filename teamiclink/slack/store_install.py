@@ -6,6 +6,7 @@ from datetime import datetime
 from slack_sdk.oauth.installation_store import InstallationStore
 from slack_sdk.oauth.installation_store import Bot
 from typing import Optional
+import psycopg2.errors
 
 
 @dataclass
@@ -35,7 +36,15 @@ class TeamiclinkInstallStore(InstallationStore):
         )
         with Database.connect(data_source_name=self.data_source_name) as connection:
             with Database.create_cursor(connection=connection) as cursor:
-                cursor.execute(query, query_params)
+                try:
+                    cursor.execute(query, query_params)
+                except psycopg2.errors.UniqueViolation:
+                    return self.update_bot(
+                        team_id=team_id,
+                        bot_token=bot_token,
+                        bot_id=bot_id,
+                        bot_user_id=bot_user_id,
+                    )
                 response = cursor.fetchone()
 
         return TeamiclinkBot(**response)
