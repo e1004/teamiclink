@@ -1,13 +1,14 @@
 from datetime import datetime, timezone
-from teamiclink.slack.errors import MissingBotError
-
 from test.conftest import DB_USER_REGULAR
+from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
+from freezegun import freeze_time
+from slack_sdk.oauth.installation_store import Installation
+from teamiclink.slack.errors import MissingBotError
 from teamiclink.slack.model import TeamiclinkBot
 from teamiclink.slack.store_install import TeamiclinkInstallStore
-
 
 TEAM_ID, BOT_TOKEN, BOT_ID, BOT_USER_ID = (
     str(uuid4()),
@@ -180,4 +181,29 @@ def test_it_updates_fields_when_creating_existing_bot(
         bot_token=slack_bot.bot_token,
         bot_id=slack_bot.bot_id,
         bot_user_id=slack_bot.bot_user_id,
+    )
+
+
+@freeze_time("2017-09-23 13:12:34")
+def test_it_calls_create_when_saving(install_store: TeamiclinkInstallStore, mocker):
+    # given
+    create = mocker.patch.object(install_store, "create_bot")
+    installation = MagicMock(spec=Installation)
+    installation.team_id = "any_team_id"
+    installation.bot_token = "any_access_token"
+    installation.bot_id = "any_bot_id"
+    installation.bot_user_id = "any_bot_user_id"
+
+    # when
+    install_store.save(installation=installation)
+
+    # then
+    create.assert_called_once_with(
+        team_id=installation.team_id,
+        bot_token=installation.bot_token,
+        bot_id=installation.bot_id,
+        bot_user_id=installation.bot_user_id,
+        installed_at=datetime(
+            2017, 9, 23, 13, 12, 34, tzinfo=timezone.utc
+        ),
     )

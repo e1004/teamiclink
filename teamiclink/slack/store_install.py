@@ -1,12 +1,12 @@
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Optional
+
+import psycopg2.errors
+from slack_sdk.oauth.installation_store import Bot, Installation, InstallationStore
+from teamiclink.database import Database
 from teamiclink.slack.errors import MissingBotError
 from teamiclink.slack.model import TeamiclinkBot
-from teamiclink.database import Database
-from datetime import datetime
-from slack_sdk.oauth.installation_store import InstallationStore
-from slack_sdk.oauth.installation_store import Bot
-from typing import Optional
-import psycopg2.errors
 
 
 @dataclass
@@ -82,6 +82,16 @@ class TeamiclinkInstallStore(InstallationStore):
             bot_id=teamiclink_bot.bot_id,
             bot_user_id=teamiclink_bot.bot_user_id,
             installed_at=teamiclink_bot.installed_at.timestamp(),
+        )
+
+    def save(self, installation: Installation) -> None:
+        assert installation.team_id
+        self.create_bot(
+            team_id=installation.team_id,
+            bot_token=installation.bot_token,
+            bot_id=installation.bot_id,
+            bot_user_id=installation.bot_user_id,
+            installed_at=datetime.now(timezone.utc),
         )
 
     def delete_bot(self, team_id: str) -> int:
