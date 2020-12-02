@@ -74,3 +74,14 @@ class TeamiclinkInstallStore(InstallationStore):
             bot_user_id=teamiclink_bot.bot_user_id,
             installed_at=teamiclink_bot.installed_at.timestamp(),
         )
+
+    def delete_bot(self, team_id: str) -> int:
+        query = """
+            DELETE FROM teamiclink.slack_bot
+            WHERE team_id=%(team_id)s;
+        """
+        query_params = dict(team_id=team_id)
+        with Database.connect(data_source_name=self.data_source_name) as connection:
+            with Database.create_cursor(connection=connection) as cursor:
+                cursor.execute(query, query_params)
+        return cursor.rowcount

@@ -119,3 +119,14 @@ def test_it_raises_error_when_reading_missing_bot(
     # then
     except MissingBotError as error:
         assert TEAM_ID in str(error)
+
+
+@pytest.mark.usefixtures("clean_db")
+def test_it_deletes_bot(
+    install_store: TeamiclinkInstallStore, slack_bot: TeamiclinkBot
+):
+    # when
+    result = install_store.delete_bot(team_id=slack_bot.team_id)
+
+    # then
+    assert result == 1
