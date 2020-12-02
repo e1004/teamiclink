@@ -130,3 +130,27 @@ def test_it_deletes_bot(
 
     # then
     assert result == 1
+
+
+@pytest.mark.usefixtures("clean_db")
+def test_it_updates_bot(
+    install_store: TeamiclinkInstallStore, slack_bot: TeamiclinkBot
+):
+    # given
+    new_bot_id = "any_new_bot_id"
+    new_bot_token = "any_new_bot_token"
+    new_bot_user_id = "any_new_bot_user_id"
+
+    # when
+    result = install_store.update_bot(
+        team_id=slack_bot.team_id,
+        bot_id=new_bot_id,
+        bot_token=new_bot_token,
+        bot_user_id=new_bot_user_id,
+    )
+
+    # then
+    assert result.team_id == slack_bot.team_id
+    assert result.bot_id == new_bot_id
+    assert result.bot_token == new_bot_token
+    assert result.bot_user_id == new_bot_user_id

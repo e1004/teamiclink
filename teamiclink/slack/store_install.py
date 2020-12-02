@@ -85,3 +85,32 @@ class TeamiclinkInstallStore(InstallationStore):
             with Database.create_cursor(connection=connection) as cursor:
                 cursor.execute(query, query_params)
         return cursor.rowcount
+
+    def update_bot(
+        self,
+        team_id: str,
+        bot_token: str,
+        bot_id: str,
+        bot_user_id: str,
+    ) -> TeamiclinkBot:
+        query = """
+            UPDATE teamiclink.slack_bot
+            SET
+                bot_token=%(bot_token)s,
+                bot_id=%(bot_id)s,
+                bot_user_id=%(bot_user_id)s
+            WHERE team_id=%(team_id)s
+            RETURNING id, team_id, bot_token, bot_id, bot_user_id, installed_at;
+        """
+        query_params = dict(
+            team_id=team_id,
+            bot_token=bot_token,
+            bot_id=bot_id,
+            bot_user_id=bot_user_id,
+        )
+        with Database.connect(data_source_name=self.data_source_name) as connection:
+            with Database.create_cursor(connection=connection) as cursor:
+                cursor.execute(query, query_params)
+                response = cursor.fetchone()
+
+        return TeamiclinkBot(**response)
