@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import ClassVar, Optional
 from slack_sdk.oauth import OAuthStateStore
 from dataclasses import dataclass
 from redis import Redis
@@ -18,4 +18,11 @@ class RedisOAuthStateStore(OAuthStateStore):
         return state
 
     def consume(self, state: str) -> bool:
-        pass
+        value: Optional[bytes] = self.redis.get(name=state)
+        if not value:
+            return False
+        decoded_value = value.decode("utf-8")
+        if decoded_value == self.EMPTY_VALUE:
+            self.redis.delete(state)
+            return True
+        return False
