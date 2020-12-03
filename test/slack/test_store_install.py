@@ -203,7 +203,5 @@ def test_it_calls_create_when_saving(install_store: TeamiclinkInstallStore, mock
         bot_token=installation.bot_token,
         bot_id=installation.bot_id,
         bot_user_id=installation.bot_user_id,
-        installed_at=datetime(
-            2017, 9, 23, 13, 12, 34, tzinfo=timezone.utc
-        ),
+        installed_at=datetime(2017, 9, 23, 13, 12, 34, tzinfo=timezone.utc),
     )
