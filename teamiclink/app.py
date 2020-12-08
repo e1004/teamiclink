@@ -1,10 +1,6 @@
 from flask import request
-import psycopg2.extras
 from flask import Flask
 from slack_bolt.adapter.flask import SlackRequestHandler
-
-
-psycopg2.extras.register_uuid()
 
 
 def create_app(slack_handler: SlackRequestHandler):
