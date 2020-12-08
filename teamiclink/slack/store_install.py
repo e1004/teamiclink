@@ -68,7 +68,11 @@ class TeamiclinkInstallStore(InstallationStore):
             raise MissingBotError(f"bot missing for team {team_id}")
 
     def find_bot(
-        self, *, team_id: Optional[str], enterprise_id: Optional[str] = None
+        self,
+        *,
+        team_id: Optional[str],
+        enterprise_id: Optional[str] = None,
+        is_enterprise_install: Optional[bool] = False,
     ) -> Optional[Bot]:
         assert team_id
         try:
@@ -86,6 +90,9 @@ class TeamiclinkInstallStore(InstallationStore):
 
     def save(self, installation: Installation) -> None:
         assert installation.team_id
+        assert installation.bot_token
+        assert installation.bot_id
+        assert installation.bot_user_id
         self.create_bot(
             team_id=installation.team_id,
             bot_token=installation.bot_token,
