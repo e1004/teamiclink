@@ -4,7 +4,7 @@ from slack_bolt.adapter.flask import SlackRequestHandler
 
 
 def create_app(slack_handler: SlackRequestHandler):
-    app = Flask(__name__)
+    app = Flask("teamiclink")
 
     def forward_slack():
         return slack_handler.handle(req=request)
