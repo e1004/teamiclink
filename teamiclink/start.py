@@ -40,6 +40,8 @@ slack_handler = SlackRequestHandler(
                         socket_connect_timeout=config.redis_socket_connect_timeout_seconds,
                     )
                 ),
+                installation_store=installation_store,
+                installation_store_bot_only=True,
             )
         ),
     )
