@@ -21,4 +21,11 @@ def create_app(slack_handler: SlackRequestHandler):
         view_func=forward_slack,
         methods=["GET"],
     )
+
+    app.add_url_rule(
+        rule="/slack/events",
+        endpoint="slack_events",
+        view_func=forward_slack,
+        methods=["POST"],
+    )
     return app
