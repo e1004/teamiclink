@@ -1,4 +1,5 @@
 from logging.config import dictConfig
+from teamiclink.slack.middleware import SlackMiddleware
 
 import psycopg2.extras
 import yaml
@@ -46,4 +47,5 @@ slack_handler = SlackRequestHandler(
         ),
     )
 )
-app = create_app(slack_handler=slack_handler)
+SlackMiddleware.INSTALL_STORE = installation_store
+app = create_app(slack_handler=slack_handler, slack_middleware=SlackMiddleware)

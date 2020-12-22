@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from teamiclink.slack.middleware import SlackMiddleware
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -7,6 +8,7 @@ from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.app import App
 from teamiclink.app import create_app
 from teamiclink.database import Database
+from teamiclink.slack.store_install import TeamiclinkInstallStore
 
 DB = {
     "host": "localhost",
@@ -67,13 +69,22 @@ def clean_db(create_db_cleaner):
 class Target:
     client: Any
     slack_handler: SlackRequestHandler
+    slack_middleware: SlackMiddleware
+    install_store: TeamiclinkInstallStore
 
 
 @pytest.fixture
 def target():
     slask_app = MagicMock(spec=App)
     slack_handler = SlackRequestHandler(app=slask_app)
-    app = create_app(slack_handler=slack_handler)
+    install_store = MagicMock(spec=TeamiclinkInstallStore)
+    SlackMiddleware.INSTALL_STORE = install_store
+    app = create_app(slack_handler=slack_handler, slack_middleware=SlackMiddleware)
     app.testing = True
     with app.test_client() as client:
-        yield Target(client=client, slack_handler=slack_handler)
+        yield Target(
+            client=client,
+            slack_handler=slack_handler,
+            slack_middleware=SlackMiddleware,
+            install_store=install_store,
+        )

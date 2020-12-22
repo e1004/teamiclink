@@ -1,10 +1,19 @@
-from flask import request
-from flask import Flask
+from teamiclink.slack.middleware import SlackMiddleware
+from flask import Flask, request
 from slack_bolt.adapter.flask import SlackRequestHandler
 
+from teamiclink.slack.events import app_uninstalled
+from typing import Type
 
-def create_app(slack_handler: SlackRequestHandler):
+
+def create_app(
+    slack_handler: SlackRequestHandler, slack_middleware: Type[SlackMiddleware]
+) -> Flask:
     app = Flask("teamiclink")
+
+    slack_handler.app.event(  # type: ignore
+        event="app_uninstalled", middleware=[slack_middleware.ctx_install_store]
+    )(app_uninstalled)
 
     def forward_slack():
         return slack_handler.handle(req=request)
