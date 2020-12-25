@@ -13,6 +13,7 @@ from teamiclink.config import AppConfig
 from teamiclink.slack.oauth_flow import TeamiclinkOAuth
 from teamiclink.slack.store_install import TeamiclinkInstallStore
 from teamiclink.slack.store_state import RedisOAuthStateStore
+from teamiclink.slack.events import register_events
 
 psycopg2.extras.register_uuid()
 
@@ -47,4 +48,5 @@ slack_handler = SlackRequestHandler(
     )
 )
 SlackMiddleware.INSTALL_STORE = installation_store
-app = create_app(slack_handler=slack_handler, slack_middleware=SlackMiddleware)
+register_events(app=slack_handler.app, middleware=SlackMiddleware)
+app = create_app(slack_handler=slack_handler)
