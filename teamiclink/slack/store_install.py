@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import psycopg2.errors
-from slack_sdk.oauth.installation_store import Bot, Installation, InstallationStore
+from slack_sdk.oauth.installation_store import Installation, InstallationStore
 from teamiclink.database import Database
 from teamiclink.slack.errors import MissingBotError
 from teamiclink.slack.model import TeamiclinkBot
@@ -67,20 +67,22 @@ class TeamiclinkInstallStore(InstallationStore):
         except TypeError:
             raise MissingBotError(f"bot missing for team {team_id}")
 
-    def find_bot(
+    def find_installation(
         self,
         *,
-        team_id: Optional[str],
         enterprise_id: Optional[str] = None,
+        team_id: Optional[str],
+        user_id: Optional[str] = None,
         is_enterprise_install: Optional[bool] = False,
-    ) -> Optional[Bot]:
+    ) -> Optional[Installation]:
         assert team_id
         try:
             teamiclink_bot = self.read_bot(team_id=team_id)
         except MissingBotError:
             return None
 
-        return Bot(
+        return Installation(
+            user_id="",
             team_id=teamiclink_bot.team_id,
             bot_token=teamiclink_bot.bot_token,
             bot_id=teamiclink_bot.bot_id,

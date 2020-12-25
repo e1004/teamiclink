@@ -69,7 +69,7 @@ def test_it_reads_slack_bot(
     assert result.bot_token == slack_bot.bot_token
 
 
-def test_it_finds_bot(install_store: TeamiclinkInstallStore, mocker):
+def test_it_finds_installation(install_store: TeamiclinkInstallStore, mocker):
     # given
     read = mocker.patch.object(install_store, "read_bot")
     bot = TeamiclinkBot(
@@ -83,10 +83,11 @@ def test_it_finds_bot(install_store: TeamiclinkInstallStore, mocker):
     read.return_value = bot
 
     # when
-    result = install_store.find_bot(team_id=bot.team_id)
+    result = install_store.find_installation(team_id=bot.team_id)
 
     # then
     read.assert_called_once_with(team_id=TEAM_ID)
+    assert result.user_id == ""
     assert result.team_id == bot.team_id
     assert result.bot_id == bot.bot_id
     assert result.bot_user_id == bot.bot_user_id
@@ -102,7 +103,7 @@ def test_it_returns_none_when_finding_missing_bot(
     read.side_effect = MissingBotError("any_message")
 
     # when
-    result = install_store.find_bot(team_id=TEAM_ID)
+    result = install_store.find_installation(team_id=TEAM_ID)
 
     # then
     assert result is None

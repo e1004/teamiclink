@@ -42,7 +42,6 @@ slack_handler = SlackRequestHandler(
                     )
                 ),
                 installation_store=installation_store,
-                installation_store_bot_only=True,
             )
         ),
     )
