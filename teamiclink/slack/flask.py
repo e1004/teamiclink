@@ -2,9 +2,7 @@ from flask import Flask, request
 from slack_bolt.adapter.flask import SlackRequestHandler
 
 
-def create_app(slack_handler: SlackRequestHandler) -> Flask:
-    app = Flask("teamiclink")
-
+def register_url_rules(slack_handler: SlackRequestHandler, app: Flask):
     def forward_slack():
         return slack_handler.handle(req=request)
 
@@ -27,4 +25,3 @@ def create_app(slack_handler: SlackRequestHandler) -> Flask:
         view_func=forward_slack,
         methods=["POST"],
     )
-    return app

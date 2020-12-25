@@ -1,13 +1,14 @@
 from dataclasses import dataclass
-from teamiclink.slack.middleware import SlackMiddleware
 from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
+from flask import Flask
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.app import App
-from teamiclink.app import create_app
 from teamiclink.database import Database
+from teamiclink.slack.flask import register_url_rules
+from teamiclink.slack.middleware import SlackMiddleware
 from teamiclink.slack.store_install import TeamiclinkInstallStore
 
 DB = {
@@ -81,7 +82,8 @@ def target():
     slack_handler = SlackRequestHandler(app=slask_app)
     install_store = MagicMock(spec=TeamiclinkInstallStore)
     SlackMiddleware.INSTALL_STORE = install_store
-    app = create_app(slack_handler=slack_handler)
+    app = Flask("teamiclink")
+    register_url_rules(slack_handler=slack_handler, app=app)
     app.testing = True
     with app.test_client() as client:
         yield Target(

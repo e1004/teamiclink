@@ -1,19 +1,20 @@
 from logging.config import dictConfig
-from teamiclink.slack.middleware import SlackMiddleware
 
 import psycopg2.extras
 import yaml
+from flask import Flask
 from redis import Redis
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 
-from teamiclink.app import create_app
 from teamiclink.config import AppConfig
+from teamiclink.slack.events import register_events
+from teamiclink.slack.middleware import SlackMiddleware
 from teamiclink.slack.oauth_flow import TeamiclinkOAuth
 from teamiclink.slack.store_install import TeamiclinkInstallStore
 from teamiclink.slack.store_state import RedisOAuthStateStore
-from teamiclink.slack.events import register_events
+from teamiclink.slack.flask import register_url_rules
 
 psycopg2.extras.register_uuid()
 
@@ -49,4 +50,5 @@ slack_handler = SlackRequestHandler(
 )
 SlackMiddleware.INSTALL_STORE = installation_store
 register_events(app=slack_handler.app, middleware=SlackMiddleware)
-app = create_app(slack_handler=slack_handler)
+app = Flask("teamiclink")
+register_url_rules(slack_handler=slack_handler, app=app)
