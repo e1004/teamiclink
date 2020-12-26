@@ -23,7 +23,7 @@
           path: ../
           pull: true
         name: registry.gitlab.com/registry-docker/teamiclink
-        tag: 1.0.0
+        tag: 1.1.0
         force_source: true
         push: true
         source: build
