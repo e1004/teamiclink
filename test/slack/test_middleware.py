@@ -30,10 +30,7 @@ def test_it_adds_client_id_to_ctx_and_calls_next(target: Target):
     target.slack_middleware.ctx_client_id(context=context, next=next_func)
 
     # then
-    assert (
-        context[SlackMiddleware.CLIENT_ID_KEY]
-        == target.slack_middleware.CLIENT_ID
-    )
+    assert context[SlackMiddleware.CLIENT_ID_KEY] == target.slack_middleware.CLIENT_ID
     next_func.assert_called_once_with()
 
 
