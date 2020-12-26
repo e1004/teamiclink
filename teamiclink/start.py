@@ -1,4 +1,5 @@
 from logging.config import dictConfig
+from teamiclink.slack.commands import register_commands
 
 import psycopg2.extras
 import yaml
@@ -50,5 +51,6 @@ slack_handler = SlackRequestHandler(
 )
 SlackMiddleware.INSTALL_STORE = installation_store
 register_events(app=slack_handler.app, middleware=SlackMiddleware)
+register_commands(app=slack_handler.app, middleware=SlackMiddleware)
 app = Flask("teamiclink")
 register_url_rules(slack_handler=slack_handler, app=app)
