@@ -81,7 +81,11 @@ def target():
     )
     slack_handler = SlackRequestHandler(app=slask_app)
     install_store = MagicMock(spec=TeamiclinkInstallStore)
-    SlackMiddleware.INSTALL_STORE = install_store
+    SlackMiddleware.set_variable(
+        install_store=install_store,
+        client_id="any_client_id",
+        client_secret="any_client_secret",
+    )
     app = Flask("teamiclink")
     register_url_rules(slack_handler=slack_handler, app=app)
     app.testing = True
