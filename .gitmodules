@@ -1,0 +1,4 @@
+[submodule "migrations"]
+	path = migrations
+	url = https://github.com/e1004/teamiclink-migrations.git
+	branch = main
