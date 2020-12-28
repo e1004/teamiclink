@@ -19,7 +19,7 @@ def uninstall(ack: Ack, client: WebClient, context: BoltContext):
 
 def register_commands(app: App, middleware: Type[SlackMiddleware]):
     cmd_uninstall = app.command(
-        command="/uninstall",
+        command="/teamiclink-uninstall",
         middleware=[middleware.ctx_client_secret, middleware.ctx_client_id],
     )
     assert cmd_uninstall
