@@ -19,7 +19,7 @@ from teamiclink.slack.flask import register_url_rules
 
 psycopg2.extras.register_uuid()
 
-config = AppConfig.load_from_env()
+config = AppConfig()
 
 with open(config.path_logging_config, mode="r") as logging_config:
     dictConfig(yaml.safe_load(logging_config.read()))
