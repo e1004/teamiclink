@@ -49,7 +49,7 @@ slack_handler = SlackRequestHandler(
         ),
     )
 )
-SlackMiddleware.INSTALL_STORE = installation_store
+SlackMiddleware.set_variables(install_store=installation_store, client_id=config.slack_client_id, client_secret=config.slack_client_secret)
 register_events(app=slack_handler.app, middleware=SlackMiddleware)
 register_commands(app=slack_handler.app, middleware=SlackMiddleware)
 app = Flask("teamiclink")

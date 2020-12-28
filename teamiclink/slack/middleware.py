@@ -14,7 +14,7 @@ class SlackMiddleware:
     CLIENT_SECRET_KEY: ClassVar[str] = "client_secret"
 
     @staticmethod
-    def set_variable(
+    def set_variables(
         install_store: TeamiclinkInstallStore, client_id: str, client_secret: str
     ):
         SlackMiddleware.INSTALL_STORE = install_store

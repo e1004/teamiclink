@@ -81,7 +81,7 @@ def target():
     )
     slack_handler = SlackRequestHandler(app=slask_app)
     install_store = MagicMock(spec=TeamiclinkInstallStore)
-    SlackMiddleware.set_variable(
+    SlackMiddleware.set_variables(
         install_store=install_store,
         client_id="any_client_id",
         client_secret="any_client_secret",
