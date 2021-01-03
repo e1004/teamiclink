@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 from slack_bolt.context import BoltContext
 from teamiclink.slack.middleware import SlackMiddleware
-from teamiclink.slack.commands import uninstall
+from teamiclink.slack.commands import create_goal, uninstall
 from slack_sdk import WebClient
 from slack_bolt import Ack
 
@@ -23,3 +23,16 @@ def test_it_calls_uninstall_with_client_variables():
         client_id=context[SlackMiddleware.CLIENT_ID_KEY],
         client_secret=context[SlackMiddleware.CLIENT_SECRET_KEY],
     )
+
+
+def test_create_goal_tbd():
+    # given
+    ack = MagicMock(spec=Ack)
+    body = dict()
+    client = MagicMock(spec=WebClient)
+
+    # when
+    create_goal(ack=ack, client=client, body=body)
+
+    # then
+    ack.assert_called_once()

@@ -1,5 +1,5 @@
 from test.conftest import Target
-from teamiclink.slack.commands import uninstall, register_commands
+from teamiclink.slack.commands import create_goal, uninstall, register_commands
 
 
 def test_it_registers_commands(target: Target):
@@ -14,3 +14,6 @@ def test_it_registers_commands(target: Target):
     assert app_listeners[0].ack_function == uninstall
     assert app_listeners[0].middleware[1].func == middleware.ctx_client_id
     assert app_listeners[0].middleware[0].func == middleware.ctx_client_secret
+
+    assert app_listeners[1].ack_function == create_goal
+    assert app_listeners[1].middleware == []

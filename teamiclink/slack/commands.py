@@ -3,9 +3,14 @@ from teamiclink.slack.middleware import SlackMiddleware
 from slack_bolt import Ack, App
 from slack_sdk import WebClient
 from slack_bolt.context import BoltContext
-from typing import Type
+from typing import Any, Dict, Type
 
 LOG = logging.getLogger(__name__)
+
+
+def create_goal(ack: Ack, client: WebClient, body: Dict[str, Any]):
+    ack()
+    LOG.info("/create_goal")
 
 
 def uninstall(ack: Ack, client: WebClient, context: BoltContext):
@@ -24,3 +29,7 @@ def register_commands(app: App, middleware: Type[SlackMiddleware]):
     )
     assert cmd_uninstall
     cmd_uninstall(uninstall)
+
+    cmd_create_goal = app.command(command="/t-goal")
+    assert cmd_create_goal
+    cmd_create_goal(create_goal)
