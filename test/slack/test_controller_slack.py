@@ -1,17 +1,16 @@
-from contextlib import suppress
 from test.conftest import Target
 
 import pytest
 from flask import request
 
 
-def test_it_forwards_events_to_slack_handler(mocker, target: Target):
+@pytest.mark.parametrize("uri", ["/slack/events", "/slack/interactions"])
+def test_it_forwards_events_to_slack_handler(uri, mocker, target: Target):
     # given
     handler = mocker.spy(target.slack_handler, "handle")
 
     # when
-    with suppress(IndexError):
-        target.client.post("/slack/events")
+    target.client.post(uri)
 
     # then
     handler.assert_called_once_with(req=request)

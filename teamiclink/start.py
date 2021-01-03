@@ -1,4 +1,5 @@
 from logging.config import dictConfig
+from teamiclink.slack.views import register_views
 from teamiclink.slack.commands import register_commands
 
 import psycopg2.extras
@@ -54,6 +55,7 @@ SlackMiddleware.set_variables(
     client_id=config.slack_client_id,
     client_secret=config.slack_client_secret,
 )
+register_views(app=slack_handler.app, middleware=SlackMiddleware)
 register_events(app=slack_handler.app, middleware=SlackMiddleware)
 register_commands(app=slack_handler.app, middleware=SlackMiddleware)
 app = Flask("teamiclink")

@@ -25,3 +25,10 @@ def register_url_rules(slack_handler: SlackRequestHandler, app: Flask):
         view_func=forward_slack,
         methods=["POST"],
     )
+
+    app.add_url_rule(
+        rule="/slack/interactions",
+        endpoint="slack_interactions",
+        view_func=forward_slack,
+        methods=["POST"],
+    )
