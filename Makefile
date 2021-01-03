@@ -1,5 +1,6 @@
 MIGRATOR := migrate/migrate:v4.13.0
 LOCAL_DB_URI := postgres://postgres:postgres@local-db:5432/main_db?sslmode=disable
+VERSION := 1.1.0
 
 .PHONY: create_migration
 create_migration:
@@ -65,3 +66,11 @@ format_migrations:
 .PHONY: test
 test:
 	pytest -v --cov teamiclink
+
+.PHONY: docker
+docker:
+	docker build -t registry.gitlab.com/registry-docker/teamiclink:${VERSION} .
+
+.PHONY: docker_push
+docker_push:
+	docker push registry.gitlab.com/registry-docker/teamiclink:${VERSION}
