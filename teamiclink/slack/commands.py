@@ -1,4 +1,5 @@
 import logging
+from teamiclink.slack.view_goal_create import CREATE_GOAL
 from teamiclink.slack.middleware import SlackMiddleware
 from slack_bolt import Ack, App
 from slack_sdk import WebClient
@@ -11,6 +12,7 @@ LOG = logging.getLogger(__name__)
 def create_goal(ack: Ack, client: WebClient, body: Dict[str, Any]):
     ack()
     LOG.info("/create_goal")
+    client.views_open(trigger_id=body["trigger_id"], view=CREATE_GOAL)
 
 
 def uninstall(ack: Ack, client: WebClient, context: BoltContext):

@@ -1,3 +1,4 @@
+from teamiclink.slack.view_goal_create import CREATE_GOAL
 from unittest.mock import MagicMock
 from slack_bolt.context import BoltContext
 from teamiclink.slack.middleware import SlackMiddleware
@@ -25,10 +26,10 @@ def test_it_calls_uninstall_with_client_variables():
     )
 
 
-def test_create_goal_tbd():
+def test_create_goal_opens_view():
     # given
     ack = MagicMock(spec=Ack)
-    body = dict()
+    body = dict(trigger_id="any_trigger_id")
     client = MagicMock(spec=WebClient)
 
     # when
@@ -36,3 +37,6 @@ def test_create_goal_tbd():
 
     # then
     ack.assert_called_once()
+    client.views_open.assert_called_once_with(
+        trigger_id=body["trigger_id"], view=CREATE_GOAL
+    )
