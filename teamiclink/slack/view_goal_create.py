@@ -12,7 +12,7 @@ CREATE_GOAL = {
             "type": "input",
             "block_id": CREATE_GOAL_INPUT_BLOCK,
             "element": {"type": "plain_text_input", "action_id": CREATE_GOAL_INPUT},
-            "label": {"type": "plain_text", "text": "Creat goal"},
+            "label": {"type": "plain_text", "text": "Create goal"},
         }
     ],
 }
