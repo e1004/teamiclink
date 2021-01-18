@@ -4,7 +4,7 @@ CREATE_GOAL_INPUT_BLOCK = "create_goal_input_block"
 CREATE_GOAL = {
     "type": "modal",
     "callback_id": CREATE_GOAL_CALLBACK_ID,
-    "title": {"type": "plain_text", "text": "Create Goal"},
+    "title": {"type": "plain_text", "text": "Teamiclink"},
     "submit": {"type": "plain_text", "text": "Submit"},
     "close": {"type": "plain_text", "text": "Cancel"},
     "blocks": [
@@ -12,7 +12,7 @@ CREATE_GOAL = {
             "type": "input",
             "block_id": CREATE_GOAL_INPUT_BLOCK,
             "element": {"type": "plain_text_input", "action_id": CREATE_GOAL_INPUT},
-            "label": {"type": "plain_text", "text": " "},
+            "label": {"type": "plain_text", "text": "Creat goal"},
         }
     ],
 }
