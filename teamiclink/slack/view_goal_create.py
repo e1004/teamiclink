@@ -33,7 +33,7 @@ def add_goal_to_payload(func):
     def wrapper_inject_goal(ack: Ack, payload: Dict[str, Any], context: BoltContext):
         try:
             content = GoalContent(
-                content=payload["state"]["value"][CREATE_GOAL_INPUT_BLOCK][
+                content=payload["state"]["values"][CREATE_GOAL_INPUT_BLOCK][
                     CREATE_GOAL_INPUT
                 ]["value"]
             ).content
