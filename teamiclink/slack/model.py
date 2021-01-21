@@ -22,3 +22,7 @@ class GoalStr(ConstrainedStr):
 
 class GoalContent(BaseModel):
     content: GoalStr
+
+
+class Goal(GoalContent):
+    slack_team_id: str
