@@ -1,3 +1,5 @@
+from teamiclink.slack.middleware import SlackMiddleware
+from teamiclink.slack.store_goal import GoalStore
 from unittest.mock import MagicMock
 
 import pytest
@@ -13,20 +15,27 @@ def test_goal_creation_saves_goal_without_spaces():
     # given
     ack = MagicMock(spec=Ack)
     goal_content = "any_goal_content"
+    team_id = "any_team_id"
     payload = {
+        "team_id": team_id,
         "state": {
             "values": {
                 CREATE_GOAL_INPUT_BLOCK: {CREATE_GOAL_INPUT: {"value": goal_content}}
             }
-        }
+        },
     }
+    goal_store = MagicMock(spec=GoalStore)
     context = BoltContext()
+    context[SlackMiddleware.GOAL_STORE_KEY] = goal_store
 
     # when
     create_goal(ack=ack, payload=payload, context=context)
 
     # then
     ack.assert_called_once()
+    goal_store.create_goal.assert_called_once_with(
+        content=goal_content, slack_team_id=team_id
+    )
 
 
 @pytest.mark.parametrize(
