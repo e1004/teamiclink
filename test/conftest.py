@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from teamiclink.slack.store_goal import GoalStore
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -80,8 +81,10 @@ def target():
         name="teamiclink", token_verification_enabled=False, token="any_token"
     )
     slack_handler = SlackRequestHandler(app=slask_app)
+    goal_store = MagicMock(spec=GoalStore)
     install_store = MagicMock(spec=TeamiclinkInstallStore)
     SlackMiddleware.set_variables(
+        goal_store=goal_store,
         install_store=install_store,
         client_id="any_client_id",
         client_secret="any_client_secret",

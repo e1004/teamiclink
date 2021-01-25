@@ -13,8 +13,8 @@ LOG = logging.getLogger(__name__)
 
 @add_goal_to_payload
 def create_goal(ack: Ack, payload: Dict[str, Any], context: BoltContext):
-    # TODO: test
     ack()
+
     LOG.info("created new goal")
 
 

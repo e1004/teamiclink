@@ -1,4 +1,5 @@
 from logging.config import dictConfig
+from teamiclink.slack.store_goal import GoalStore
 from teamiclink.slack.views import register_views
 from teamiclink.slack.commands import register_commands
 
@@ -50,7 +51,9 @@ slack_handler = SlackRequestHandler(
         ),
     )
 )
+goal_store = GoalStore(data_source_name=config.dsn)
 SlackMiddleware.set_variables(
+    goal_store=goal_store,
     install_store=installation_store,
     client_id=config.slack_client_id,
     client_secret=config.slack_client_secret,
