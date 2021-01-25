@@ -23,6 +23,8 @@ def create_goal(ack: Ack, payload: Dict[str, Any], context: BoltContext):
 
 
 def register_views(app: App, middleware: Type[SlackMiddleware]) -> None:
-    view_create_goal = app.view(constraints=CREATE_GOAL_CALLBACK_ID, middleware=[])
+    view_create_goal = app.view(
+        constraints=CREATE_GOAL_CALLBACK_ID, middleware=[middleware.ctx_goal_store]
+    )
     assert view_create_goal
     view_create_goal(create_goal)

@@ -12,4 +12,4 @@ def test_it_registers_views(target: Target):
 
     # then
     assert app_listeners[0].ack_function == create_goal
-    assert app_listeners[0].middleware == []
+    assert app_listeners[0].middleware[0].func == middleware.ctx_goal_store
