@@ -14,7 +14,7 @@ class GoalStore:
             (slack_team_id, content)
             VALUES
             (%(slack_team_id)s, %(content)s)
-            RETURNING slack_team_id, content;
+            RETURNING slack_team_id, content, id;
         """
         query_params = dict(
             slack_team_id=slack_team_id,
@@ -29,7 +29,7 @@ class GoalStore:
 
     def read_goals(self, slack_team_id: str) -> List[Goal]:
         query = """
-            SELECT slack_team_id, content
+            SELECT slack_team_id, content, id
             FROM teamiclink.goal
             WHERE slack_team_id = %(slack_team_id)s
             ORDER BY content ASC;

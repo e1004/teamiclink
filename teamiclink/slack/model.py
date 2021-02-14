@@ -26,3 +26,4 @@ class GoalContent(BaseModel):
 
 class Goal(GoalContent):
     slack_team_id: str
+    id: UUID

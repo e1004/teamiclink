@@ -1,4 +1,5 @@
 import logging
+from teamiclink.slack.model import Goal
 from teamiclink.slack.store_goal import GoalStore
 from teamiclink.slack.view_goal_create import CREATE_GOAL
 from teamiclink.slack.middleware import SlackMiddleware
@@ -16,14 +17,26 @@ def create_goal(ack: Ack, client: WebClient, body: Dict[str, Any]):
     client.views_open(trigger_id=body["trigger_id"], view=CREATE_GOAL)
 
 
-def make_goal_block(content: str):
+def make_goal_block(goal: Goal):
     return {
         "type": "section",
-        "text": {"type": "plain_text", "text": f"{content}"},
+        "text": {"type": "plain_text", "text": f"{goal.content}"},
         "accessory": {
+            "value": str(goal.id),
+            "action_id": "delete_goal",
             "type": "button",
             "text": {"type": "plain_text", "text": "Delete"},
             "style": "danger",
+            "confirm": {
+                "title": {"type": "plain_text", "text": "Are you sure?"},
+                "text": {
+                    "type": "plain_text",
+                    "text": f'Delete "{goal.content}"?',
+                },
+                "confirm": {"type": "plain_text", "text": "Confirm"},
+                "deny": {"type": "plain_text", "text": "Cancel"},
+                "style": "danger",
+            },
         },
     }
 
@@ -33,7 +46,7 @@ def read_goals(ack: Ack, say: Say, context: BoltContext):
     goal_store: GoalStore = context[SlackMiddleware.GOAL_STORE_KEY]
     goals = goal_store.read_goals(slack_team_id=context["team_id"])
     LOG.info(f"/read_goals: {goals}")
-    say(text="", blocks=[make_goal_block(content=goal.content) for goal in goals])
+    say(text="", blocks=[make_goal_block(goal=goal) for goal in goals])
 
 
 def uninstall(ack: Ack, client: WebClient, context: BoltContext):

@@ -1,3 +1,4 @@
+from uuid import uuid4
 from teamiclink.slack.model import Goal
 from slack_bolt.context.say.say import Say
 from teamiclink.slack.store_goal import GoalStore
@@ -56,7 +57,7 @@ def test_it_reads_goals():
     say = MagicMock(spec=Say)
     context = BoltContext()
     goal_store = MagicMock(spec=GoalStore)
-    goal1 = Goal(content="any_content", slack_team_id="any_team_id")
+    goal1 = Goal(content="any_content", slack_team_id="any_team_id", id=uuid4())
     goal_store.read_goals.return_value = [goal1]
     context[SlackMiddleware.GOAL_STORE_KEY] = goal_store
     context["team_id"] = "any_team_id"
@@ -69,4 +70,4 @@ def test_it_reads_goals():
     ack.assert_called_once()
     goal_store.read_goals.assert_called_once_with(slack_team_id=context["team_id"])
     assert say_calls["text"] == ""
-    assert say_calls["blocks"] == [make_goal_block(content=goal1.content)]
+    assert say_calls["blocks"] == [make_goal_block(goal=goal1)]
