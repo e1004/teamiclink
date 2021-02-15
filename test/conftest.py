@@ -11,6 +11,7 @@ from teamiclink.database import Database
 from teamiclink.slack.flask import register_url_rules
 from teamiclink.slack.middleware import SlackMiddleware
 from teamiclink.slack.store_install import TeamiclinkInstallStore
+import psycopg2.extras
 
 DB = {
     "host": "localhost",
@@ -61,6 +62,7 @@ def create_db_cleaner():
 
 @pytest.fixture
 def clean_db(create_db_cleaner):
+    psycopg2.extras.register_uuid()
     yield
     with Database.connect(data_source_name=DB_USER_ROOT) as connection:
         with Database.create_cursor(connection=connection) as cursor:

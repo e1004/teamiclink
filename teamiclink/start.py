@@ -65,4 +65,3 @@ register_commands(app=slack_handler.app, middleware=SlackMiddleware)
 register_actions(app=slack_handler.app, middleware=SlackMiddleware)
 app = Flask("teamiclink")
 register_url_rules(slack_handler=slack_handler, app=app)
-

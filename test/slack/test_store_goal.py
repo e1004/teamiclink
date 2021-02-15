@@ -61,3 +61,15 @@ def test_it_reads_goals(goal_store: GoalStore):
     assert result[0].content == goal2.content
     assert result[0].slack_team_id == result[1].slack_team_id == TEAM_ID1
     assert result[0].id is not None
+
+
+@pytest.mark.usefixtures("clean_db", "slack_bot")
+def test_it_deletes_goal(goal_store: GoalStore):
+    # given
+    goal = goal_store.create_goal(content="bb", slack_team_id=TEAM_ID1)
+
+    # when
+    result = goal_store.delete_goal(id=goal.id)
+
+    # then
+    assert result == 1

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List
 from teamiclink.slack.model import Goal
 from teamiclink.database import Database
+from uuid import UUID
 
 
 @dataclass
@@ -41,3 +42,15 @@ class GoalStore:
                 response = cursor.fetchall()
 
         return [Goal(**goal) for goal in response]
+
+    def delete_goal(self, id: UUID) -> int:
+        query = """
+            DELETE FROM teamiclink.goal
+            WHERE id=%(id)s;
+        """
+        query_params = dict(id=id)
+        with Database.connect(data_source_name=self.data_source_name) as connection:
+            with Database.create_cursor(connection=connection) as cursor:
+                cursor.execute(query, query_params)
+
+        return cursor.rowcount
