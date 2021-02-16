@@ -58,9 +58,6 @@ migrate_db_local_down:
 		-database ${LOCAL_DB_URI} \
 		-path ./migrations down -all
 
-.PHONY: test
-test:
-	pytest
 
 .PHONY: lint
 lint:
