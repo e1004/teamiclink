@@ -16,10 +16,11 @@ def delete_goal(
     ack()
     goal_store: GoalStore = context[SlackMiddleware.GOAL_STORE_KEY]
     goal_store.delete_goal(id=UUID(payload["value"]))
-    message = f"Deleted goal {payload['value']}"
-    LOG.info(message)
+    LOG.info(f"Deleted goal {payload['value']}")
     client.chat_postEphemeral(
-        text=message, user=context["user_id"], channel=context["channel_id"]
+        text="Goal deleted",
+        user=context["user_id"],
+        channel=context["channel_id"],
     )
 
 
