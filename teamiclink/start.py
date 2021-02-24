@@ -1,4 +1,5 @@
 from logging.config import dictConfig
+from teamiclink.slack.actions import register_actions
 from teamiclink.slack.store_goal import GoalStore
 from teamiclink.slack.views import register_views
 from teamiclink.slack.commands import register_commands
@@ -61,5 +62,6 @@ SlackMiddleware.set_variables(
 register_views(app=slack_handler.app, middleware=SlackMiddleware)
 register_events(app=slack_handler.app, middleware=SlackMiddleware)
 register_commands(app=slack_handler.app, middleware=SlackMiddleware)
+register_actions(app=slack_handler.app, middleware=SlackMiddleware)
 app = Flask("teamiclink")
 register_url_rules(slack_handler=slack_handler, app=app)

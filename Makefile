@@ -10,6 +10,14 @@ create_migration:
 		--rm ${MIGRATOR} \
 		create -ext sql -dir ./migrations -seq ${Name}
 
+.PHONY: db
+db:
+	make start_db_local migrate_db_local_up
+
+.PHONY: undb
+undb:
+	make migrate_db_local_down stop_db_local
+
 .PHONY: start_db_local
 start_db_local:
 	docker network create local-db-net
@@ -20,6 +28,8 @@ start_db_local:
 		-e POSTGRES_PASSWORD=postgres \
 		-e POSTGRES_DB=main_db \
 		postgres:13.0-alpine -c "fsync=off"
+	timeout 15s bash -c \
+		'until docker exec local-db pg_isready; do sleep 5; done'
 
 .PHONY: stop_db_local
 stop_db_local:
@@ -48,9 +58,6 @@ migrate_db_local_down:
 		-database ${LOCAL_DB_URI} \
 		-path ./migrations down -all
 
-.PHONY: test
-test:
-	pytest
 
 .PHONY: lint
 lint:

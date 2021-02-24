@@ -1,5 +1,10 @@
 from test.conftest import Target
-from teamiclink.slack.commands import create_goal, uninstall, register_commands
+from teamiclink.slack.commands import (
+    create_goal,
+    read_goals,
+    uninstall,
+    register_commands,
+)
 
 
 def test_it_registers_commands(target: Target):
@@ -17,3 +22,6 @@ def test_it_registers_commands(target: Target):
 
     assert app_listeners[1].ack_function == create_goal
     assert app_listeners[1].middleware == []
+
+    assert app_listeners[2].ack_function == read_goals
+    assert app_listeners[2].middleware[0].func == middleware.ctx_goal_store
