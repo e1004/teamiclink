@@ -5,15 +5,22 @@ from uuid import UUID
 from slack_bolt import App, BoltContext, Ack
 from teamiclink.slack.middleware import SlackMiddleware
 from teamiclink.slack.store_goal import GoalStore
+from slack_sdk import WebClient
 
 LOG = logging.getLogger(__name__)
 
 
-def delete_goal(context: BoltContext, payload: Dict[str, Any], ack: Ack):
+def delete_goal(
+    context: BoltContext, payload: Dict[str, Any], ack: Ack, client: WebClient
+):
+    ack()
     goal_store: GoalStore = context[SlackMiddleware.GOAL_STORE_KEY]
     goal_store.delete_goal(id=UUID(payload["value"]))
-    ack(text="Deleted", response_type="ephemeral")
-    LOG.info(f"Deleted goal {payload['value']}")
+    message = f"Deleted goal {payload['value']}"
+    LOG.info(message)
+    client.chat_postEphemeral(
+        text=message, user=context["user_id"], channel=context["channel_id"]
+    )
 
 
 def register_actions(app: App, middleware: Type[SlackMiddleware]) -> None:
