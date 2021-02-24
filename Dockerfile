@@ -26,5 +26,5 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN groupadd -g 61000 docker && \
     useradd -g 61000 -l -M -s /bin/false -u 61000 docker
 COPY --from=base --chown=docker:docker /opt/venv /opt/venv
-COPY --chown=docker:docker gunicorn.ini.py teamiclink/ ./teamiclink/
+COPY --chown=docker:docker teamiclink/ ./teamiclink/
 USER docker
