@@ -71,3 +71,21 @@ def test_it_reads_goals():
     goal_store.read_goals.assert_called_once_with(slack_team_id=context["team_id"])
     assert say_calls["text"] == ""
     assert say_calls["blocks"] == [make_goal_block(goal=goal1)]
+
+
+def test_it_handles_no_goals():
+    # given
+    ack = MagicMock(spec=Ack)
+    say = MagicMock(spec=Say)
+    context = BoltContext()
+    goal_store = MagicMock(spec=GoalStore)
+    goal_store.read_goals.return_value = []
+    context[SlackMiddleware.GOAL_STORE_KEY] = goal_store
+    context["team_id"] = "any_team_id"
+
+    # when
+    read_goals(ack=ack, say=say, context=context)
+    say_calls = say.call_args.kwargs
+
+    # then
+    assert say_calls["text"] is not None

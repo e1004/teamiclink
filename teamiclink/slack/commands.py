@@ -46,7 +46,10 @@ def read_goals(ack: Ack, say: Say, context: BoltContext):
     goal_store: GoalStore = context[SlackMiddleware.GOAL_STORE_KEY]
     goals = goal_store.read_goals(slack_team_id=context["team_id"])
     LOG.info(f"/read_goals: {goals}")
-    say(text="", blocks=[make_goal_block(goal=goal) for goal in goals])
+    if goals:
+        say(text="", blocks=[make_goal_block(goal=goal) for goal in goals])
+    else:
+        say(text="No goals")
 
 
 def uninstall(ack: Ack, client: WebClient, context: BoltContext):
