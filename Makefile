@@ -29,7 +29,7 @@ start_db_local:
 		-e POSTGRES_DB=main_db \
 		postgres:13.0-alpine -c "fsync=off"
 	timeout 15s bash -c \
-		'until docker exec local-db pg_isready; do sleep 5; done'
+		'until docker exec local-db pg_isready; do sleep 1; done'
 
 .PHONY: stop_db_local
 stop_db_local:
@@ -39,24 +39,20 @@ stop_db_local:
 .PHONY: migrate_db_local_up
 migrate_db_local_up:
 	docker run \
-		-v ${PWD}:/root/sources \
 		-v ${PWD}/migrations:/migrations \
-		-w /root/sources \
 		--net local-db-net \
 		--rm ${MIGRATOR} \
 		-database ${LOCAL_DB_URI} \
-		-path /migrations up
+		-source=file://migrations up
 
 .PHONY: migrate_db_local_down
 migrate_db_local_down:
 	docker run \
-		-v ${PWD}:/root/sources \
 		-v ${PWD}/migrations:/migrations \
-		-w /root/sources \
 		--net local-db-net \
 		--rm ${MIGRATOR} \
 		-database ${LOCAL_DB_URI} \
-		-path /migrations down -all
+		-source=file://migrations down -all
 
 
 .PHONY: lint
