@@ -45,7 +45,7 @@ migrate_db_local_up:
 		--net local-db-net \
 		--rm ${MIGRATOR} \
 		-database ${LOCAL_DB_URI} \
-		-path ./migrations up
+		-path /migrations up
 
 .PHONY: migrate_db_local_down
 migrate_db_local_down:
@@ -56,7 +56,7 @@ migrate_db_local_down:
 		--net local-db-net \
 		--rm ${MIGRATOR} \
 		-database ${LOCAL_DB_URI} \
-		-path ./migrations down -all
+		-path /migrations down -all
 
 
 .PHONY: lint
