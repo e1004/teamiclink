@@ -21,3 +21,5 @@ jobs:
           -r requirements-dev.txt
       - name: Lint
         run: make lint
+      - name: Test
+        run: make db test undb
